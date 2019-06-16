@@ -2,10 +2,10 @@
 Miscellaneous utilities for Azure DevOps
 
 # Getting Started
-##A. Pre-requisites
+## A. Pre-requisites
 * Golang is installed on your system
 
-##B. How to run?
+## B. How to run?
 ### 1. Configure environment
 
 export AZURE_DEVOPS_ORG="<Azure DevOps Org>"
