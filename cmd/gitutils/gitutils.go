@@ -1,39 +1,67 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"inspiredbytech/azure-devops-utils/api"
 	"log"
 	"os"
 )
 
-func main() {
-	var url = os.Getenv("AZURE_URL")
-	var token = os.Getenv("AZURE_TOKEN")
-	var org = os.Getenv("AZURE_ORG")
-	var project = os.Getenv("AZURE_PROJECT")
-	log.Print(token)
+const azureDevOpsGitURL = "https://dev.azure.com/%s/%s/_apis/git/repositories"
+const azureDevOpsToken = "AZURE_DEVOPS_TOKEN"
+const azureDevOpsOrg = "AZURE_DEVOPS_ORG"
+const azureDevOpsProject = "AZURE_DEVOPS_PROJECT"
 
-	url = fmt.Sprintf(url, org, project)
-	log.Println(url)
+func main() {
+	var command string
+	flag.StringVar(&command, "cmd", "", "a string")
+	flag.Parse()
+
+	var t Action
+	fmt.Println(command)
+	switch command {
+	case "git-branches":
+		t = AzureDevOpsGitBranches{}
+	}
+	if t != nil {
+		t.Invoke()
+	}
+}
+
+type Action interface {
+	Invoke()
+}
+
+type AzureDevOpsGitBranches struct {
+}
+
+func (AzureDevOpsGitBranches) Invoke() {
+	var baseUrl = azureDevOpsGitURL
+	var token = os.Getenv(azureDevOpsToken)
+	var org = os.Getenv(azureDevOpsOrg)
+	var project = os.Getenv(azureDevOpsProject)
+
+	baseUrl = fmt.Sprintf(baseUrl, org, project)
+	log.Print(org, "-", project)
 	var client = api.NewApiClient(token)
 	var retVal = AzureApiReturn{}
-	err := client.Get(url, &retVal)
+	err := client.Get(baseUrl, &retVal)
 	if err != nil {
 		log.Print(err)
 	}
 
 	log.Printf("Received %d repositories", retVal.Count)
 
-	var url2 = "https://dev.azure.com/%s/%s/_apis/git/repositories/%s/refs"
-	var url3 = ""
+	var url2 = baseUrl + "/%s/refs"
+	var repoUrl = ""
 	var branchInfo = RepoRef{}
 	fmt.Printf("Repo#, Branch#, Repo Name, Branch Name, Creator\n")
 	for i, repo := range retVal.Repos {
-		url3 = fmt.Sprintf(url2, org, project, repo.Name)
-		//log.Print(url3)
+		repoUrl = fmt.Sprintf(url2, repo.Name)
+		//log.Print(repoUrl)
 		branchInfo = RepoRef{}
-		err := client.Get(url3, &branchInfo)
+		err := client.Get(repoUrl, &branchInfo)
 		if err != nil {
 			log.Print(err)
 		} else {
@@ -44,7 +72,6 @@ func main() {
 		}
 
 	}
-
 }
 
 type AzureApiReturn struct {
