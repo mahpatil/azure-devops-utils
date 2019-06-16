@@ -8,10 +8,11 @@ Miscellaneous utilities for Azure DevOps
 ## B. How to run?
 ### 1. Configure environment
 
+```
 export AZURE_DEVOPS_ORG="<Azure DevOps Org>"
 export AZURE_DEVOPS_PROJECT="<Azure DevOps projectname>"
 export AZURE_DEVOPS_TOKEN="<Azure DevOps Token, generate this from your [security settings](https://dev.azure.com/nationwide-sl/_usersSettings/tokens)>"
-
+```
 ### 2. Run commands
 
 Run the following command to get list of git branches based on the specified environment variables
