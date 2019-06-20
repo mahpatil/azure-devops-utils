@@ -17,7 +17,7 @@ export AZURE_DEVOPS_TOKEN="<Azure DevOps Token, generate this from your [securit
 
 Run the following command to get list of git branches based on the specified environment variables
 ```
-go run inspiredbytech/azure-devops-utils/cmd/gitutils -cmd=git-branches
+go run inspiredbytech/azure-devops-utils/cmd -cmd=git-branches
 ```
 
 # Contribute
