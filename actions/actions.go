@@ -1,33 +1,11 @@
-package main
+package actions
 
 import (
-	"flag"
 	"fmt"
 	"inspiredbytech/azure-devops-utils/api"
 	"log"
 	"os"
 )
-
-const azureDevOpsGitURL = "https://dev.azure.com/%s/%s/_apis/git/repositories"
-const azureDevOpsToken = "AZURE_DEVOPS_TOKEN"
-const azureDevOpsOrg = "AZURE_DEVOPS_ORG"
-const azureDevOpsProject = "AZURE_DEVOPS_PROJECT"
-
-func main() {
-	var command string
-	flag.StringVar(&command, "cmd", "", "a string")
-	flag.Parse()
-
-	var t Action
-	fmt.Println(command)
-	switch command {
-	case "git-branches":
-		t = AzureDevOpsGitBranches{}
-	}
-	if t != nil {
-		t.Invoke()
-	}
-}
 
 type Action interface {
 	Invoke()
@@ -35,6 +13,11 @@ type Action interface {
 
 type AzureDevOpsGitBranches struct {
 }
+
+const azureDevOpsGitURL = "https://dev.azure.com/%s/%s/_apis/git/repositories"
+const azureDevOpsToken = "AZURE_DEVOPS_TOKEN"
+const azureDevOpsOrg = "AZURE_DEVOPS_ORG"
+const azureDevOpsProject = "AZURE_DEVOPS_PROJECT"
 
 func (AzureDevOpsGitBranches) Invoke() {
 	var baseUrl = azureDevOpsGitURL
